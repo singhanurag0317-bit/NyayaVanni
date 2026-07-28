@@ -14,6 +14,10 @@ import {
   Linkedin,
   Instagram,
   ChevronRight,
+  Heart,
+  Star,
+  Globe,
+  Users,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -126,8 +130,8 @@ export default function LandingPage() {
       <div className="absolute inset-0 court-vignette opacity-95 pointer-events-none z-0"></div>
 
       {/* Courtroom Theme Header */}
-      <nav className="relative z-20 w-full border-b border-court-gold/25 bg-court-walnut/90 backdrop-blur-xl transition-all duration-300">
-        <div className="flex items-center justify-between w-full px-6 py-5 mx-auto max-w-7xl">
+      <nav className="sticky top-0 z-30 w-full border-b border-court-gold/25 bg-court-walnut/90 backdrop-blur-xl shadow-lg shadow-black/10 transition-all duration-300">
+        <div className="flex items-center justify-between w-full px-6 py-4 mx-auto max-w-7xl">
           <div
             className="flex items-center gap-2.5 text-2xl font-bold tracking-tight text-court-cream cursor-pointer"
             onClick={() => navigate('/')}
@@ -164,7 +168,7 @@ export default function LandingPage() {
       <main className="relative z-10 flex-1 flex flex-col lg:flex-row w-full max-w-7xl px-6 py-8 md:py-12 mx-auto gap-8 items-stretch">
         
         {/* Left Panel: Content, Descriptions and 2x2 Grid of Actions */}
-        <div className="w-full lg:w-[62%] flex flex-col justify-center text-left lg:pr-8">
+        <div className="w-full lg:w-[58%] flex flex-col justify-center text-left lg:pr-6">
           <div className="inline-block mb-5 px-4 py-1.5 rounded-full bg-court-gold/10 border border-court-gold/20 text-court-gold font-medium text-xs max-w-fit animate-pulse-soft">
             ⚖️ AUTHORITATIVE LEGAL INTELLIGENCE
           </div>
@@ -179,12 +183,12 @@ export default function LandingPage() {
           </p>
 
           {/* Structured Actions: 2x2 Courtroom Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 w-full mb-8">
             
             {/* Card 1: Upload Document */}
             <div className="relative group">
               <div
-                className={`h-full court-card court-card-gold-hover rounded-3xl p-8 flex flex-col items-center justify-center min-h-[340px] text-center cursor-pointer
+                className={`h-full court-card court-card-gold-hover rounded-3xl p-8 flex flex-col items-center justify-center min-h-[340px] text-center cursor-pointer transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)]
                   ${dragActive ? 'border-yellow-400 shadow-[0_0_25px_rgba(212,168,32,0.35)]' : ''}`}
                 onDragEnter={handleDrag}
                 onDragLeave={handleDrag}
@@ -201,7 +205,7 @@ export default function LandingPage() {
 
                 {!file ? (
                   <>
-                    <div className="flex items-center justify-center w-14 h-14 mb-5 rounded-full bg-court-walnut border border-court-gold/40 shadow-inner group-hover:scale-105 transition-transform duration-300">
+                    <div className="flex items-center justify-center w-14 h-14 mb-5 rounded-full bg-court-walnut border border-court-gold/40 shadow-inner group-hover:scale-110 group-hover:shadow-[0_0_20px_rgba(212,168,32,0.3)] transition-all duration-300">
                       <UploadCloud className="w-7 h-7 text-court-gold" />
                     </div>
                     <h3 className="mb-2 text-xl font-bold font-serif text-court-cream">
@@ -212,7 +216,7 @@ export default function LandingPage() {
                     </p>
                     <button
                       onClick={onButtonClick}
-                      className="flex items-center justify-center gap-2 px-6 py-2.5 font-bold bg-court-gold hover:bg-yellow-500 text-court-walnut rounded-full shadow-lg shadow-court-gold/10 hover:scale-105 transition-all text-sm"
+                      className="flex items-center justify-center gap-2 px-6 py-2.5 font-bold bg-court-gold hover:bg-yellow-500 text-court-walnut rounded-full shadow-lg shadow-court-gold/10 hover:scale-105 hover:shadow-xl hover:shadow-court-gold/20 transition-all text-sm"
                     >
                       <FileText className="w-4 h-4" /> {t('landing.upload.btn')}
                     </button>
@@ -246,7 +250,7 @@ export default function LandingPage() {
                           handleAnalyze();
                         }}
                         disabled={loading}
-                        className="flex items-center justify-center gap-2 px-6 py-2.5 font-bold bg-court-gold hover:bg-yellow-500 text-court-walnut rounded-full shadow-lg hover:scale-105 transition-all text-sm"
+                        className="flex items-center justify-center gap-2 px-6 py-2.5 font-bold bg-court-gold hover:bg-yellow-500 text-court-walnut rounded-full shadow-lg hover:scale-105 hover:shadow-xl hover:shadow-court-gold/20 transition-all text-sm"
                       >
                         {loading ? (
                           <>
@@ -268,10 +272,10 @@ export default function LandingPage() {
 
             {/* Card 2: Chat with Bot */}
             <div
-              className="court-card court-card-gold-hover rounded-3xl p-8 flex flex-col items-center justify-center min-h-[340px] text-center cursor-pointer group"
+              className="court-card court-card-gold-hover rounded-3xl p-8 flex flex-col items-center justify-center min-h-[340px] text-center cursor-pointer group transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)]"
               onClick={() => navigate('/chat')}
             >
-              <div className="flex items-center justify-center w-14 h-14 mb-5 rounded-full bg-court-walnut border border-court-gold/40 shadow-inner group-hover:scale-105 transition-transform duration-300">
+              <div className="flex items-center justify-center w-14 h-14 mb-5 rounded-full bg-court-walnut border border-court-gold/40 shadow-inner group-hover:scale-110 group-hover:shadow-[0_0_20px_rgba(212,168,32,0.3)] transition-all duration-300">
                 <Bot className="w-7 h-7 text-court-gold" />
               </div>
               <h3 className="mb-2 text-xl font-bold font-serif text-court-cream">
@@ -289,10 +293,10 @@ export default function LandingPage() {
                       state: { initialPrompt: 'I need to draft a legal notice.' },
                     });
                   }}
-                  className="flex items-center justify-between px-4 py-1.5 text-xs text-left border rounded-lg bg-court-walnut/30 border-court-gold/20 hover:border-court-gold/50 text-court-muted hover:text-court-cream transition-all group/btn"
+                  className="flex items-center justify-between px-4 py-1.5 text-xs text-left border rounded-lg bg-court-walnut/30 border-court-gold/20 hover:border-court-gold/50 text-court-muted hover:text-court-cream hover:bg-court-gold/5 transition-all group/btn"
                 >
                   {t('landing.chat.draftNotice')}{' '}
-                  <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover/btn:opacity-100 transition-opacity" />
+                  <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover/btn:opacity-100 group-hover/btn:translate-x-1 transition-all" />
                 </button>
                 <button
                   onClick={(e) => {
@@ -301,10 +305,10 @@ export default function LandingPage() {
                       state: { initialPrompt: 'I need to draft a reply to a legal notice.' },
                     });
                   }}
-                  className="flex items-center justify-between px-4 py-1.5 text-xs text-left border rounded-lg bg-court-walnut/30 border-court-gold/20 hover:border-court-gold/50 text-court-muted hover:text-court-cream transition-all group/btn"
+                  className="flex items-center justify-between px-4 py-1.5 text-xs text-left border rounded-lg bg-court-walnut/30 border-court-gold/20 hover:border-court-gold/50 text-court-muted hover:text-court-cream hover:bg-court-gold/5 transition-all group/btn"
                 >
                   {t('landing.chat.replyNotice')}{' '}
-                  <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover/btn:opacity-100 transition-opacity" />
+                  <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover/btn:opacity-100 group-hover/btn:translate-x-1 transition-all" />
                 </button>
               </div>
 
@@ -313,7 +317,7 @@ export default function LandingPage() {
                   e.stopPropagation();
                   navigate('/chat');
                 }}
-                className="flex items-center justify-center gap-2 px-6 py-2.5 font-bold bg-court-gold hover:bg-yellow-500 text-court-walnut rounded-full shadow-lg hover:scale-105 transition-all text-sm"
+                className="flex items-center justify-center gap-2 px-6 py-2.5 font-bold bg-court-gold hover:bg-yellow-500 text-court-walnut rounded-full shadow-lg hover:scale-105 hover:shadow-xl hover:shadow-court-gold/20 transition-all text-sm"
               >
                 <MessageSquare className="w-4 h-4" /> {t('landing.chat.btn')}
               </button>
@@ -321,10 +325,10 @@ export default function LandingPage() {
 
             {/* Card 3: Scam Detector */}
             <div
-              className="court-card court-card-gold-hover rounded-3xl p-8 flex flex-col items-center justify-center min-h-[340px] text-center cursor-pointer group"
+              className="court-card court-card-gold-hover rounded-3xl p-8 flex flex-col items-center justify-center min-h-[340px] text-center cursor-pointer group transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)]"
               onClick={() => navigate('/scam-detector')}
             >
-              <div className="flex items-center justify-center w-14 h-14 mb-5 rounded-full bg-court-walnut border border-court-gold/40 shadow-inner group-hover:scale-105 transition-transform duration-300">
+              <div className="flex items-center justify-center w-14 h-14 mb-5 rounded-full bg-court-walnut border border-court-gold/40 shadow-inner group-hover:scale-110 group-hover:shadow-[0_0_20px_rgba(212,168,32,0.3)] transition-all duration-300">
                 <ShieldCheck className="w-7 h-7 text-court-gold" />
               </div>
               <h3 className="mb-2 text-xl font-bold font-serif text-court-cream">
@@ -338,7 +342,7 @@ export default function LandingPage() {
                   e.stopPropagation();
                   navigate('/scam-detector');
                 }}
-                className="flex items-center justify-center gap-2 px-6 py-2.5 font-bold bg-court-gold hover:bg-yellow-500 text-court-walnut rounded-full shadow-lg hover:scale-105 transition-all text-sm"
+                className="flex items-center justify-center gap-2 px-6 py-2.5 font-bold bg-court-gold hover:bg-yellow-500 text-court-walnut rounded-full shadow-lg hover:scale-105 hover:shadow-xl hover:shadow-court-gold/20 transition-all text-sm"
               >
                 Scan Text <ArrowRight className="w-4 h-4" />
               </button>
@@ -346,10 +350,10 @@ export default function LandingPage() {
 
             {/* Card 4: Version Difference Analysis */}
             <div
-              className="court-card court-card-gold-hover rounded-3xl p-8 flex flex-col items-center justify-center min-h-[340px] text-center cursor-pointer group"
+              className="court-card court-card-gold-hover rounded-3xl p-8 flex flex-col items-center justify-center min-h-[340px] text-center cursor-pointer group transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)]"
               onClick={() => navigate('/version-diff')}
             >
-              <div className="flex items-center justify-center w-14 h-14 mb-5 rounded-full bg-court-walnut border border-court-gold/40 shadow-inner group-hover:scale-105 transition-transform duration-300">
+              <div className="flex items-center justify-center w-14 h-14 mb-5 rounded-full bg-court-walnut border border-court-gold/40 shadow-inner group-hover:scale-110 group-hover:shadow-[0_0_20px_rgba(212,168,32,0.3)] transition-all duration-300">
                 <GitCompare className="w-7 h-7 text-court-gold" />
               </div>
               <h3 className="mb-2 text-xl font-bold font-serif text-court-cream">
@@ -363,7 +367,7 @@ export default function LandingPage() {
                   e.stopPropagation();
                   navigate('/version-diff');
                 }}
-                className="flex items-center justify-center gap-2 px-6 py-2.5 font-bold bg-court-gold hover:bg-yellow-500 text-court-walnut rounded-full shadow-lg hover:scale-105 transition-all text-sm"
+                className="flex items-center justify-center gap-2 px-6 py-2.5 font-bold bg-court-gold hover:bg-yellow-500 text-court-walnut rounded-full shadow-lg hover:scale-105 hover:shadow-xl hover:shadow-court-gold/20 transition-all text-sm"
               >
                 Compare Versions <ArrowRight className="w-4 h-4" />
               </button>
@@ -372,7 +376,7 @@ export default function LandingPage() {
         </div>
 
         {/* Right Panel: Stylized Barrister / Justice SVG Illustration */}
-        <div className="w-full lg:w-[38%] flex items-center justify-center p-6 sm:p-12 relative overflow-hidden select-none">
+        <div className="w-full lg:w-[42%] flex items-center justify-center p-4 sm:p-8 relative overflow-hidden select-none">
           <div className="absolute inset-0 bg-radial-gradient from-court-gold/10 via-transparent to-transparent opacity-30 pointer-events-none"></div>
 
           <div className="w-full max-w-[340px] lg:max-w-full flex justify-center items-center relative animate-float">
@@ -462,7 +466,7 @@ export default function LandingPage() {
               </div>
             </div>
 
-            <div className="columns-1 md:columns-2 gap-6 space-y-4">
+            <div className="space-y-4">
               {[
                 { q: t('faq.q1'), a: t('faq.a1') },
                 { q: t('faq.q2'), a: t('faq.a2') },
@@ -471,7 +475,7 @@ export default function LandingPage() {
               ].map((item, idx) => (
                 <div
                   key={idx}
-                  className="mb-4 break-inside-avoid p-5 transition-all duration-300 border rounded-xl border-court-gold/20 bg-court-walnut/50 hover:border-court-gold/45"
+                  className="p-5 transition-all duration-300 border rounded-xl border-court-gold/20 bg-court-walnut/50 hover:border-court-gold/45 hover:bg-court-gold/5"
                 >
                   <button
                     type="button"
@@ -483,21 +487,21 @@ export default function LandingPage() {
                     </span>
 
                     <span
-                      className={`flex items-center justify-center w-8 h-8 rounded-full shrink-0 border transition-all duration-300 bg-court-walnut/30 border-court-gold/20 ${
+                      className={`flex items-center justify-center w-8 h-8 rounded-full shrink-0 border transition-all duration-500 bg-court-walnut/30 border-court-gold/20 ${
                         openFaq === idx
                           ? 'rotate-45 bg-court-gold/10 border-court-gold/40'
                           : ''
                       }`}
                     >
-                      <span className="text-court-gold">+</span>
+                      <span className="text-court-gold text-lg leading-none">+</span>
                     </span>
                   </button>
 
                   <div
-                    className={`overflow-hidden transition-all duration-300 ${
+                    className={`overflow-hidden transition-all duration-500 ease-in-out ${
                       openFaq === idx
-                        ? 'max-h-40 opacity-100 mt-3'
-                        : 'max-h-0 opacity-0'
+                        ? 'max-h-96 opacity-100 mt-3'
+                        : 'max-h-0 opacity-0 mt-0'
                     }`}
                   >
                     <p className="leading-relaxed text-court-muted text-sm">
@@ -510,13 +514,63 @@ export default function LandingPage() {
           </div>
         </div>
 
+        {/* Contributors Section */}
+        <section className="w-full max-w-7xl px-6 mx-auto mt-12">
+          <div className="p-8 border bg-court-walnut/90 border-court-gold/25 rounded-3xl md:p-10 shadow-2xl text-center">
+            <div className="flex items-center justify-center gap-3 mb-3">
+              <Heart className="w-6 h-6 text-court-gold" />
+              <h2 className="text-3xl font-bold font-serif text-court-cream md:text-4xl">
+                Contributors
+              </h2>
+              <Heart className="w-6 h-6 text-court-gold" />
+            </div>
+            <p className="max-w-xl mx-auto text-court-muted mb-8">
+              Powered by an amazing community of legal experts, developers, and designers.
+              Every contribution makes Indian law more accessible to everyone.
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              {[
+                { name: 'SHIVANSHVERMA18', role: 'UI/UX & Frontend', initials: 'SV' },
+                { name: 'Anshul23102', role: 'Backend & API', initials: 'AN' },
+                { name: 'Singhanurag0317-bit', role: 'Full Stack', initials: 'SA' },
+                { name: 'Choudharyms', role: 'Project Lead', initials: 'CM' },
+              ].map((c, i) => (
+                <div
+                  key={i}
+                  className="flex items-center gap-3 px-5 py-3 rounded-full border border-court-gold/20 bg-court-walnut/70 hover:border-court-gold/40 hover:bg-court-gold/5 transition-all duration-300"
+                >
+                  <span className="w-9 h-9 rounded-full bg-court-gold/20 border border-court-gold/30 flex items-center justify-center text-court-gold font-bold text-xs">
+                    {c.initials}
+                  </span>
+                  <div className="text-left">
+                    <p className="font-semibold text-court-cream text-sm leading-tight">{c.name}</p>
+                    <p className="text-xs text-court-muted">{c.role}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-6 pt-6 border-t border-court-gold/20">
+              <a
+                href="https://github.com/choudharyms/NyayaVanni/graphs/contributors"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-sm text-court-gold hover:text-yellow-400 transition-colors"
+              >
+                <Users className="w-4 h-4" />
+                View all contributors on GitHub
+                <ArrowRight className="w-3.5 h-3.5" />
+              </a>
+            </div>
+          </div>
+        </section>
+
         {/* Premium Courtroom Footer */}
-        <footer className="w-full mt-12 border-t border-court-gold/25 bg-court-walnut/95 backdrop-blur-xl z-20">
+        <footer className="w-full mt-12 border-t border-court-gold/20 bg-court-walnut/95 backdrop-blur-xl z-20">
           <div className="mx-auto max-w-7xl px-6 py-10 md:px-10 md:py-12">
-            <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
+            <div className="grid grid-cols-1 gap-10 md:grid-cols-4">
               
-              {/* Branding and Description */}
-              <div className="max-w-md">
+              {/* Branding */}
+              <div className="md:col-span-1">
                 <div className="flex items-center gap-2.5 text-xl font-bold text-court-cream">
                   <span className="inline-flex items-center justify-center w-9 h-9 border rounded-full bg-court-gold/15 border-court-gold/25">
                     <Scale className="w-4.5 h-4.5 text-court-gold" />
@@ -528,143 +582,75 @@ export default function LandingPage() {
                 <p className="mt-3.5 text-sm text-court-muted leading-relaxed">
                   Understand Indian legal documents in simple language. Upload contracts or notices and get clearer insights fast.
                 </p>
+                <div className="flex items-center gap-4 mt-5">
+                  <a href="https://twitter.com/nyayavanni" target="_blank" rel="noopener noreferrer" className="text-court-muted hover:text-court-gold transition-all duration-300 hover:-translate-y-0.5 hover:scale-110" aria-label="Twitter">
+                    <Twitter className="w-4.5 h-4.5" />
+                  </a>
+                  <a href="https://github.com/choudharyms/NyayaVanni" target="_blank" rel="noopener noreferrer" className="text-court-muted hover:text-court-gold transition-all duration-300 hover:-translate-y-0.5 hover:scale-110" aria-label="GitHub">
+                    <Github className="w-4.5 h-4.5" />
+                  </a>
+                  <a href="https://linkedin.com/company/nyayavanni" target="_blank" rel="noopener noreferrer" className="text-court-muted hover:text-court-gold transition-all duration-300 hover:-translate-y-0.5 hover:scale-110" aria-label="LinkedIn">
+                    <Linkedin className="w-4.5 h-4.5" />
+                  </a>
+                  <a href="https://instagram.com/nyayavanni" target="_blank" rel="noopener noreferrer" className="text-court-muted hover:text-court-gold transition-all duration-300 hover:-translate-y-0.5 hover:scale-110" aria-label="Instagram">
+                    <Instagram className="w-4.5 h-4.5" />
+                  </a>
+                </div>
               </div>
 
-              {/* Links Sections */}
-              <div className="grid w-full grid-cols-2 gap-8 sm:grid-cols-3 md:w-auto">
-                <div>
-                  <p className="mb-4 text-sm font-semibold text-court-cream tracking-wide uppercase">
-                    Product
-                  </p>
-                  <div className="flex flex-col gap-2.5 text-sm text-court-muted">
-                    <button
-                      onClick={() => navigate('/chat')}
-                      className={`${footerLinkClass} flex items-center gap-1`}
-                    >
-                      Chat with AI
-                      <ChevronRight className="w-3 h-3 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-1" />
-                    </button>
-
-                    <button
-                      onClick={() => navigate('/document-generator')}
-                      className={`${footerLinkClass} flex items-center gap-1`}
-                    >
-                      Generate NDA{' '}
-                      <ChevronRight className="w-3 h-3 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-1" />
-                    </button>
-                    <button
-                      onClick={() =>
-                        window.scrollTo({ top: 0, behavior: 'smooth' })
-                      }
-                      className={`${footerLinkClass} flex items-center gap-1`}
-                    >
-                      Upload Document{' '}
-                      <ChevronRight className="w-3 h-3 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-1" />
-                    </button>
-                    <button
-                      onClick={() => navigate('/lawyers')}
-                      className={`${footerLinkClass} flex items-center gap-1`}
-                    >
-                      Hire a Lawyer
-                      <ChevronRight className="w-3 h-3 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-1" />
-                    </button>
-                    <button
-                      onClick={() => navigate('/version-diff')}
-                      className={`${footerLinkClass} flex items-center gap-1`}
-                    >
-                      Version Diff
-                      <ChevronRight className="w-3 h-3 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-1" />
-                    </button>
-                  </div>
+              <div>
+                <p className="mb-4 text-sm font-semibold text-court-cream tracking-wide uppercase">Product</p>
+                <div className="flex flex-col gap-2.5 text-sm text-court-muted">
+                  <button onClick={() => navigate('/chat')} className={`${footerLinkClass} flex items-center gap-1`}>
+                    Chat with AI <ChevronRight className="w-3 h-3 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-1" />
+                  </button>
+                  <button onClick={() => navigate('/document-generator')} className={`${footerLinkClass} flex items-center gap-1`}>
+                    Generate NDA <ChevronRight className="w-3 h-3 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-1" />
+                  </button>
+                  <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className={`${footerLinkClass} flex items-center gap-1`}>
+                    Upload Document <ChevronRight className="w-3 h-3 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-1" />
+                  </button>
+                  <button onClick={() => navigate('/lawyers')} className={`${footerLinkClass} flex items-center gap-1`}>
+                    Hire a Lawyer <ChevronRight className="w-3 h-3 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-1" />
+                  </button>
+                  <button onClick={() => navigate('/version-diff')} className={`${footerLinkClass} flex items-center gap-1`}>
+                    Version Diff <ChevronRight className="w-3 h-3 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-1" />
+                  </button>
                 </div>
+              </div>
 
-                <div>
-                  <p className="mb-4 text-sm font-semibold text-court-cream tracking-wide uppercase">
-                    Resources
-                  </p>
-                  <div className="flex flex-col gap-2.5 text-sm text-court-muted">
-                    <button
-                      onClick={() => navigate('/faq')}
-                      className={`${footerLinkClass} flex items-center gap-1`}
-                    >
-                      FAQ
-                      <ChevronRight className="w-3 h-3 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-1" />
-                    </button>
-                    <button
-                      onClick={() => navigate('/privacy-policy')}
-                      className={`${footerLinkClass} flex items-center gap-1`}
-                    >
-                      Privacy Policy{' '}
-                      <ChevronRight className="w-3 h-3 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-1" />
-                    </button>
-                    <button
-                      onClick={() => navigate('/terms')}
-                      className={`${footerLinkClass} flex items-center gap-1`}
-                    >
-                      Terms of Service{' '}
-                      <ChevronRight className="w-3 h-3 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-1" />
-                    </button>
-                  </div>
+              <div>
+                <p className="mb-4 text-sm font-semibold text-court-cream tracking-wide uppercase">Resources</p>
+                <div className="flex flex-col gap-2.5 text-sm text-court-muted">
+                  <button onClick={() => navigate('/faq')} className={`${footerLinkClass} flex items-center gap-1`}>
+                    FAQ <ChevronRight className="w-3 h-3 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-1" />
+                  </button>
+                  <button onClick={() => navigate('/privacy-policy')} className={`${footerLinkClass} flex items-center gap-1`}>
+                    Privacy Policy <ChevronRight className="w-3 h-3 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-1" />
+                  </button>
+                  <button onClick={() => navigate('/terms')} className={`${footerLinkClass} flex items-center gap-1`}>
+                    Terms of Service <ChevronRight className="w-3 h-3 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-1" />
+                  </button>
                 </div>
+              </div>
 
-                <div>
-                  <p className="mb-4 text-sm font-semibold text-court-cream tracking-wide uppercase">
-                    Contact
-                  </p>
-                  <div className="flex flex-col gap-2.5 text-sm text-court-muted">
-                    <a
-                      href="mailto:support@nyayavanni.com"
-                      className="transition-all duration-300 ease-out hover:text-court-gold hover:translate-x-1 hover:[text-shadow:0_0_4px_rgba(212,168,32,0.4)]"
-                    >
-                      support@nyayavanni.com
-                    </a>
-                    <span className="text-xs text-court-muted/70">
-                      Mon–Fri, 10AM–6PM
-                    </span>
-                  </div>
+              <div>
+                <p className="mb-4 text-sm font-semibold text-court-cream tracking-wide uppercase">Contact</p>
+                <div className="flex flex-col gap-2.5 text-sm text-court-muted">
+                  <a href="mailto:support@nyayavanni.com" className="transition-all duration-300 ease-out hover:text-court-gold hover:translate-x-1">
+                    support@nyayavanni.com
+                  </a>
+                  <span className="text-xs text-court-muted/70">Mon–Fri, 10AM–6PM</span>
                 </div>
+                <p className="mt-6 text-xs text-court-muted/60 italic leading-relaxed">
+                  Not legal advice. For professional help, consult a lawyer.
+                </p>
               </div>
             </div>
 
-            <div className="flex flex-col items-center sm:items-start justify-between gap-4 pt-6 mt-8 border-t border-court-gold/20 sm:flex-row">
-              <p className="text-xs text-court-muted text-center sm:text-left mt-1">
+            <div className="pt-6 mt-8 border-t border-court-gold/20 text-center">
+              <p className="text-xs text-court-muted">
                 © {new Date().getFullYear()} NyayaVanni. All rights reserved.
-              </p>
-
-              {/* Gold Accented Social Links */}
-              <div className="flex items-center gap-5">
-                <a
-                  href="#"
-                  className="text-court-muted hover:text-court-gold transition-all duration-300 hover:-translate-y-1 hover:scale-110"
-                  aria-label="Twitter"
-                >
-                  <Twitter className="w-4.5 h-4.5" />
-                </a>
-                <a
-                  href="#"
-                  className="text-court-muted hover:text-court-gold transition-all duration-300 hover:-translate-y-1 hover:scale-110"
-                  aria-label="GitHub"
-                >
-                  <Github className="w-4.5 h-4.5" />
-                </a>
-                <a
-                  href="#"
-                  className="text-court-muted hover:text-court-gold transition-all duration-300 hover:-translate-y-1 hover:scale-110"
-                  aria-label="LinkedIn"
-                >
-                  <Linkedin className="w-4.5 h-4.5" />
-                </a>
-                <a
-                  href="#"
-                  className="text-court-muted hover:text-court-gold transition-all duration-300 hover:-translate-y-1 hover:scale-110"
-                  aria-label="Instagram"
-                >
-                  <Instagram className="w-4.5 h-4.5" />
-                </a>
-              </div>
-
-              <p className="text-xs text-court-muted text-center sm:text-right mt-1 italic">
-                Not legal advice. For professional help, consult a lawyer.
               </p>
             </div>
           </div>

@@ -93,7 +93,7 @@ export default function ContactUs() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col transition-colors duration-300">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-nyaya-50/30 dark:from-slate-950 dark:to-nyaya-950/20 text-slate-900 dark:text-slate-100 flex flex-col transition-colors duration-300">
       <div className="max-w-6xl mx-auto flex flex-col flex-1 w-full px-6 py-6">
         <header className="flex items-center justify-between py-4 mb-8 border-b border-slate-200 dark:border-slate-800">
           <button
@@ -103,7 +103,18 @@ export default function ContactUs() {
             <ArrowLeft className="w-4 h-4" />{' '}
             {language === 'en' ? 'Back' : 'वापस'}
           </button>
-          <ThemeToggle />
+          <div className="flex items-center gap-3">
+            <div
+              className="flex items-center gap-2 text-lg font-bold tracking-tight text-slate-800 dark:text-white cursor-pointer"
+              onClick={() => navigate('/')}
+            >
+              <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-nyaya-500/15 border border-nyaya-500/25">
+                <Scale className="w-4 h-4 text-nyaya-600 dark:text-nyaya-400" />
+              </span>
+              <span>Nyaya<span className="text-nyaya-600 dark:text-nyaya-400">Vanni</span></span>
+            </div>
+            <ThemeToggle />
+          </div>
         </header>
 
         <main className="flex-1 w-full flex flex-col md:flex-row gap-12">
@@ -117,7 +128,7 @@ export default function ContactUs() {
 
             <form
               onSubmit={handleSubmit}
-              className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col gap-6"
+              className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-lg shadow-nyaya-500/5 dark:shadow-nyaya-500/10 hover:shadow-xl transition-shadow duration-300 flex flex-col gap-6"
             >
               {submitStatus === 'success' && (
                 <div className="bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 text-emerald-700 dark:text-emerald-400 p-4 rounded-xl flex items-start gap-3">
@@ -278,7 +289,7 @@ export default function ContactUs() {
           </div>
 
           <div className="w-full md:w-80 flex flex-col gap-6 mt-8 md:mt-24">
-            <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-lg shadow-nyaya-500/5 dark:shadow-nyaya-500/10 hover:shadow-xl transition-shadow duration-300">
               <h3 className="text-xl font-bold text-slate-850 dark:text-white mb-6">
                 {L.CONTACT_INFO}
               </h3>
