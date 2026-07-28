@@ -39,8 +39,10 @@ from ..services.file_validation import detect_actual_mime, validate_file_magic_b
 from ..services.gemini_service import (
     GEMINI_TIMEOUT,
     analyze_document_with_gemini,
+    compare_document_clauses,
     generate_chat_response,
     stream_chat_response,
+    translate_document_text,
 )
 from ..services.knowledge_graph_service import LegalKnowledgeGraphBuilder
 from ..services.ocr_service import extract_document
@@ -512,6 +514,11 @@ def _analyze_document_sync(
         raise HTTPException(status_code=500, detail="Document analysis failed")
 
 
+class CompareClausesRequest(BaseModel):
+    old_text: str = Field(..., min_length=1, max_length=12000)
+    new_text: str = Field(..., min_length=1, max_length=12000)
+
+
 class AnalyzeTextRequest(BaseModel):
     text: str = Field(..., min_length=1)
     language: str = "en"
@@ -527,6 +534,22 @@ async def analyze_text(request: Request, body: AnalyzeTextRequest):
         body.text,
         body.language,
     )
+
+
+@api_router.post("/compare-clauses")
+@limiter.limit("10/minute")
+async def compare_clauses(request: Request, body: CompareClausesRequest):
+    try:
+        session_id = require_session_id(request)
+        result = compare_document_clauses(body.old_text, body.new_text)
+        return result
+    except RateLimitExceeded:
+        raise
+    except HTTPException as http_err:
+        raise http_err
+    except Exception as e:
+        logger.error(f"Clause comparison failed: {e}")
+        raise HTTPException(status_code=500, detail="Clause comparison failed")
 
 
 MOCK_ANALYSIS_RESULT = {

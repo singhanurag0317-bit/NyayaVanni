@@ -1,4 +1,5 @@
 from datetime import date
+from enum import Enum
 from typing import List, Literal, Optional
 
 from pydantic import BaseModel, Field
@@ -44,3 +45,40 @@ class DocumentAnalysis(BaseModel):
     consequences: List[str] = Field(description="List of potential outcomes")
     recommended_timeline: str = Field(description="e.g., Respond within X days")
     actions: List[ActionItem]
+
+
+class SeverityLevel(str, Enum):
+    low = "low"
+    medium = "medium"
+    high = "high"
+    critical = "critical"
+
+
+class ClauseMatchStatus(str, Enum):
+    unchanged = "unchanged"
+    modified = "modified"
+    added = "added"
+    removed = "removed"
+
+
+class MatchedClause(BaseModel):
+    clause_text_a: str = Field(description="Clause text from document A (empty if added)")
+    clause_text_b: str = Field(description="Clause text from document B (empty if removed)")
+    clause_title: str = Field(description="Title or section number of the clause")
+    status: ClauseMatchStatus = Field(description="Whether this clause was added, removed, modified, or unchanged")
+    significance: SeverityLevel = Field(description="How significant this change is")
+
+
+class ClauseComparisonResult(BaseModel):
+    total_clauses_a: int = Field(description="Total clauses extracted from document A")
+    total_clauses_b: int = Field(description="Total clauses extracted from document B")
+    matched_clauses: List[MatchedClause] = Field(description="List of matched clauses with their status")
+    added_count: int = Field(description="Number of clauses added")
+    removed_count: int = Field(description="Number of clauses removed")
+    modified_count: int = Field(description="Number of clauses modified")
+    unchanged_count: int = Field(description="Number of clauses unchanged")
+
+
+class ClauseComparisonResponse(BaseModel):
+    comparison: ClauseComparisonResult
+    summary: str = Field(description="AI-generated summary of key differences")

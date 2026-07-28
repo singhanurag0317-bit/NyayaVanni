@@ -9,7 +9,7 @@ import google.generativeai as genai
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field
 
-from ..models.llm_schemas import DocumentAnalysis
+from ..models.llm_schemas import ClauseComparisonResponse, DocumentAnalysis
 
 load_dotenv()
 
@@ -132,6 +132,65 @@ def _parse_structured_response(resp) -> dict:
                     pass
 
     raise ValueError("Unable to parse structured JSON from model response")
+
+
+def compare_document_clauses(old_text: str, new_text: str) -> dict:
+    old_text = old_text[:12000]
+    new_text = new_text[:12000]
+
+    clause_config = {
+        "temperature": 0.2,
+        "top_p": 0.9,
+        "max_output_tokens": 8192,
+        "response_mime_type": "application/json",
+        "response_schema": ClauseComparisonResponse.model_json_schema(),
+    }
+
+    system_instruction = (
+        "You are an expert Indian Legal AI that compares two legal documents "
+        "by extracting, matching, and classifying individual clauses. "
+        "Always respond with valid JSON matching the provided schema exactly."
+    )
+
+    prompt = f"""Compare the following two legal documents at the clause level.
+
+Extract all clauses from each document, match semantically similar clauses, and classify each match.
+
+Document A (original):
+<document_content>
+{old_text}
+</document_content>
+
+Document B (new version):
+<document_content>
+{new_text}
+</document_content>
+
+For each clause:
+- If it appears in both with same meaning → status: "unchanged"
+- If it appears in both but wording/effect changed → status: "modified"
+- If it only appears in Document B → status: "added"
+- If it only appears in Document A → status: "removed"
+
+Focus on substantive clauses like: payment terms, liability, termination, IP, privacy, dispute resolution, non-compete, confidentiality."""
+
+    try:
+        model = genai.GenerativeModel(
+            model_name=GEMINI_MODEL_NAME,
+            generation_config=clause_config,
+            system_instruction=system_instruction,
+        )
+        response = model.generate_content(
+            prompt, request_options={"timeout": GEMINI_TIMEOUT}
+        )
+        return _parse_structured_response(response)
+    except Exception as e:
+        logger.error(f"Clause comparison failed: {e}")
+        if "not found" in str(e).lower() or "not supported" in str(e).lower():
+            raise RuntimeError(
+                f"Gemini model '{GEMINI_MODEL_NAME}' not found. Check GEMINI_MODEL_NAME environment variable."
+            )
+        raise
 
 
 def analyze_document_with_gemini(

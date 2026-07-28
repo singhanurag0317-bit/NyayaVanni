@@ -16,6 +16,8 @@ import {
   Scale,
   Plus,
   Minus,
+  Columns,
+  List,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -429,14 +431,87 @@ function DiffResults({ data }) {
   );
 }
 
+function ClauseResults({ data }) {
+  const { comparison, summary } = data;
+  const statusColors = {
+    unchanged: 'border-emerald-200 bg-emerald-50/60 dark:bg-emerald-900/10 dark:border-emerald-800/40',
+    modified: 'border-amber-200 bg-amber-50/60 dark:bg-amber-900/10 dark:border-amber-800/40',
+    added: 'border-blue-200 bg-blue-50/60 dark:bg-blue-900/10 dark:border-blue-800/40',
+    removed: 'border-rose-200 bg-rose-50/60 dark:bg-rose-900/10 dark:border-rose-800/40',
+  };
+  const statusBadge = {
+    unchanged: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300',
+    modified: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300',
+    added: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
+    removed: 'bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300',
+  };
+
+  return (
+    <div className="space-y-6 mt-6">
+      <div className="grid grid-cols-4 gap-3">
+        <div className="rounded-2xl border border-emerald-200 dark:border-emerald-800/40 bg-emerald-50/60 dark:bg-emerald-900/10 p-3 text-center">
+          <div className="text-xl font-bold text-emerald-600 dark:text-emerald-400">{comparison.unchanged_count}</div>
+          <div className="text-xs text-slate-500 dark:text-slate-400">Unchanged</div>
+        </div>
+        <div className="rounded-2xl border border-amber-200 dark:border-amber-800/40 bg-amber-50/60 dark:bg-amber-900/10 p-3 text-center">
+          <div className="text-xl font-bold text-amber-600 dark:text-amber-400">{comparison.modified_count}</div>
+          <div className="text-xs text-slate-500 dark:text-slate-400">Modified</div>
+        </div>
+        <div className="rounded-2xl border border-blue-200 dark:border-blue-800/40 bg-blue-50/60 dark:bg-blue-900/10 p-3 text-center">
+          <div className="text-xl font-bold text-blue-600 dark:text-blue-400">{comparison.added_count}</div>
+          <div className="text-xs text-slate-500 dark:text-slate-400">Added</div>
+        </div>
+        <div className="rounded-2xl border border-rose-200 dark:border-rose-800/40 bg-rose-50/60 dark:bg-rose-900/10 p-3 text-center">
+          <div className="text-xl font-bold text-rose-600 dark:text-rose-400">{comparison.removed_count}</div>
+          <div className="text-xs text-slate-500 dark:text-slate-400">Removed</div>
+        </div>
+      </div>
+
+      {summary && (
+        <div className="rounded-2xl border border-slate-200 dark:border-slate-700/50 bg-white/80 dark:bg-slate-900/80 p-4">
+          <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{summary}</p>
+        </div>
+      )}
+
+      <div className="space-y-3">
+        {comparison.matched_clauses.map((clause, i) => (
+          <div key={i} className={`rounded-2xl border p-4 ${statusColors[clause.status] || statusColors.unchanged}`}>
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <span className={`px-2 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wide ${statusBadge[clause.status]}`}>{clause.status}</span>
+              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">{clause.clause_title}</span>
+            </div>
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              {clause.status !== 'added' && (
+                <div className="p-3 rounded-xl bg-white/60 dark:bg-slate-950/40 border border-slate-100 dark:border-slate-800">
+                  <div className="text-xs font-semibold uppercase text-slate-400 mb-1">Document A</div>
+                  <p className="text-slate-700 dark:text-slate-300 whitespace-pre-wrap">{clause.clause_text_a}</p>
+                </div>
+              )}
+              {clause.status !== 'removed' && (
+                <div className="p-3 rounded-xl bg-white/60 dark:bg-slate-950/40 border border-slate-100 dark:border-slate-800">
+                  <div className="text-xs font-semibold uppercase text-slate-400 mb-1">Document B</div>
+                  <p className="text-slate-700 dark:text-slate-300 whitespace-pre-wrap">{clause.clause_text_b}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function VersionDiff() {
   const navigate = useNavigate();
-  useLanguage(); // Remove unused t variable
+  useLanguage();
   const [oldFile, setOldFile] = useState(null);
   const [newFile, setNewFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [result, setResult] = useState(null);
+  const [clauseResult, setClauseResult] = useState(null);
+  const [clauseLoading, setClauseLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState('diff');
 
   const canAnalyse = oldFile && newFile && !loading;
 
@@ -445,6 +520,7 @@ export default function VersionDiff() {
     setLoading(true);
     setError(null);
     setResult(null);
+    setClauseResult(null);
 
     const form = new FormData();
     form.append('old_document', oldFile);
@@ -470,11 +546,50 @@ export default function VersionDiff() {
     }
   };
 
+  const handleClauseCompare = async () => {
+    setClauseLoading(true);
+    setError(null);
+    try {
+      await ensureSessionId(API_BASE);
+
+      const readerA = new FileReader();
+      const readerB = new FileReader();
+
+      const textA = await new Promise((resolve) => {
+        readerA.onload = () => resolve(readerA.result);
+        readerA.readAsText(oldFile);
+      });
+      const textB = await new Promise((resolve) => {
+        readerB.onload = () => resolve(readerB.result);
+        readerB.readAsText(newFile);
+      });
+
+      const { data } = await axios.post(
+        `${API_BASE}/api/compare-clauses`,
+        { old_text: textA, new_text: textB },
+        {
+          headers: { 'Content-Type': 'application/json' },
+          timeout: 120000,
+          withCredentials: true,
+        }
+      );
+      setClauseResult(data);
+      setActiveTab('clauses');
+    } catch (err) {
+      const msg = err.response?.data?.detail || err.message || MESSAGES.SOMETHING_WENT_WRONG;
+      setError(msg);
+    } finally {
+      setClauseLoading(false);
+    }
+  };
+
   const handleReset = () => {
     setOldFile(null);
     setNewFile(null);
     setResult(null);
+    setClauseResult(null);
     setError(null);
+    setActiveTab('diff');
   };
 
   return (
@@ -597,19 +712,65 @@ export default function VersionDiff() {
         )}
 
         {result && !loading && (
-          <div>
+            <div>
             <div className="flex items-center justify-between mb-4 px-1">
               <h2 className="font-bold text-slate-900 dark:text-white text-lg">
                 Analysis Results
               </h2>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={handleClauseCompare}
+                  disabled={clauseLoading}
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer disabled:opacity-50"
+                >
+                  <Columns className="w-3.5 h-3.5" />
+                  {clauseLoading ? 'Loading...' : 'Clause Comparison'}
+                </button>
+                <button
+                  onClick={handleReset}
+                  className="text-sm text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 underline underline-offset-2 transition-colors"
+                >
+                  Start over
+                </button>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-1 mb-4 px-1 border-b border-slate-200 dark:border-slate-800">
               <button
-                onClick={handleReset}
-                className="text-sm text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 underline underline-offset-2 transition-colors"
+                onClick={() => setActiveTab('diff')}
+                className={`px-4 py-2 text-sm font-semibold border-b-2 transition-colors cursor-pointer ${
+                  activeTab === 'diff'
+                    ? 'border-nyaya-500 text-nyaya-600 dark:text-nyaya-400'
+                    : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
+                }`}
               >
-                Start over
+                <List className="w-3.5 h-3.5 inline mr-1.5" />
+                Diff Analysis
+              </button>
+              <button
+                onClick={() => setActiveTab('clauses')}
+                className={`px-4 py-2 text-sm font-semibold border-b-2 transition-colors cursor-pointer ${
+                  activeTab === 'clauses'
+                    ? 'border-nyaya-500 text-nyaya-600 dark:text-nyaya-400'
+                    : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
+                }`}
+              >
+                <Columns className="w-3.5 h-3.5 inline mr-1.5" />
+                Clause View
               </button>
             </div>
-            <DiffResults data={result} />
+
+            {activeTab === 'diff' && <DiffResults data={result} />}
+            {activeTab === 'clauses' && clauseResult && (
+              <ClauseResults data={clauseResult} />
+            )}
+            {activeTab === 'clauses' && !clauseResult && (
+              <div className="rounded-2xl border border-slate-200 dark:border-slate-700/50 bg-white/80 dark:bg-slate-900/80 p-8 text-center">
+                <p className="text-sm text-slate-500 dark:text-slate-400">
+                  Click &ldquo;Clause Comparison&rdquo; above to see a clause-by-clause comparison.
+                </p>
+              </div>
+            )}
           </div>
         )}
       </main>
